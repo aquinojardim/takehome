@@ -16,7 +16,7 @@ export default function Row (props){
       evenOdd={props.evenOdd}
       boxId={props.rowId + i} 
       className={classes.box} 
-      // onClick={props.onClick} 
+      onClick={props.onClick} 
       // gameBoard={props.gameBoard[props.rowId + i]}
       />)
   }

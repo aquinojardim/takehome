@@ -1,5 +1,10 @@
 import * as types from '../constants/actionTypes';
 
+export const setCurrentPiece = (obj) => ({
+  type: types.SET_CURRENT_PIECE,
+  payload: obj,
+});
+
 export const addFav = (topic) => ({
   type: types.ADD_FAV,
   payload: topic,

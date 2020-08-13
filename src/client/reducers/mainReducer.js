@@ -4,68 +4,59 @@ import * as types from '../constants/actionTypes';
 const initialState = {
   fav: [],
   db:{},
-};
-
-// all this functions could be in a helpers folder
-// send a get request to the /info API to retrive all item from database
-function getInfo() {
-  fetch("/info", {
-    method: "GET",
-    headers: {'Content-Type': 'application/json'},
-  })
-  .then(res => res.json())
-  .then(data => {
-    // object with all data base info
-    return data
-  })
-  .catch(err => {
-    console.log('an error occured trying to get info');
-    throw err;
-  })
-};
-
-// send a post request to the /info API to save new item on database
-function postInfo(payload) {
-  fetch("/info", {
-    method: "POST",
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({ item: payload })
-  })
-  .then(res => res.json())
-  .then(data => {
-    // data is an object with properties _id and item
-    return data;
-  })
-  .catch(err => {
-    console.log('an error occured trying to post info');
-    throw err;
-  })
-};
-
-// send a post request to the /info API to save new item on database
-function deleteInfo(payload) {
-  fetch(`/secret/task/${payload}`, {
-    method: "DELETE",
-    headers: {'Content-Type': 'application/json'},
-  })
-  .then(res => res.json())
-  .then(data => {
-    // data is an object with deleted object history on property _doc we have the same _id then payload
-    return data._doc._id;
-  })
-  .catch(err => {
-    console.log('an error occured trying to delete info');
-    throw err;
-  })
+  gameBoard: [
+    "-", "-", "-", "-", "-", "-", "-", "-",
+    "-", "-", "-", "-", "-", "-", "-", "-",
+    "-", "-", "-", "-", "-", "-", "-", "-",
+    "-", "-", "-", "-", "-", "-", "-", "-",
+    "-", "-", "-", "-", "-", "-", "-", "-",
+    "-", "-", "-", "-", "-", "-", "-", "-",
+    "-", "-", "-", "-", "-", "-", "-", "-",
+    "-", "-", "-", "-", "-", "-", "-", "-",
+    "-", "-", "-", "-", "-", "-", "-", "-",
+    "-", "-", "-", "-", "-", "-", "-", "-",
+  ],
+  currentPlayer: "Red",
+  // pieces red are 0 to 16
+  // piecer grey are 48 to 64
+  currentPiece: '',
+  suggestedMove: [],
+  gamestart: true,
+  gameover: false,
+  message: "Is Red turn",
 };
 
 const mainReducer = (state = initialState, action) => {
   // copy all state properties do avoid state mutability
+  let currentPieceCopy;
+  let suggestedMoveCopy = [];
   let dbCopy = {...state.db}
   let favCopy = [...state.fav]
 
   switch (action.type) {
     // Update state with payload
+    case types.SET_CURRENT_PIECE:
+      console.log(action.payload)
+      currentPieceCopy = `${action.payload.id}piece`
+      // cover edge case when you just have one move
+      const boardLeft = [0, 8, 16, 24, 32, 40, 48, 56]
+      const boardRight = [7, 15, 23, 31, 39, 47, 55, 63]
+      if(action.payload.color){
+        if(!boardLeft.includes(action.payload.id)) suggestedMoveCopy.push(action.payload.id+7)
+        if(!boardRight.includes(action.payload.id)) suggestedMoveCopy.push(action.payload.id+9)
+      } else {
+        if(!boardRight.includes(action.payload.id))suggestedMoveCopy.push(action.payload.id-7)
+        if(!boardLeft.includes(action.payload.id)) suggestedMoveCopy.push(action.payload.id-9)
+      }
+
+      console.log(suggestedMoveCopy)
+
+      return {
+        ...state,
+        currentPiece: currentPieceCopy,
+        suggestedMove: suggestedMoveCopy
+      };
+
     case types.ADD_FAV:
       
       favCopy.push(action.payload)
@@ -74,35 +65,6 @@ const mainReducer = (state = initialState, action) => {
         ...state,
         fav: favCopy,
       };
-
-    case types.GET_FETCH:
-      
-      dbCopy = getInfo()
-
-      return {
-        ...state,
-        db: dbCopy,
-      };
-
-    case types.POST_FETCH:
-      
-      const newObj = postInfo(action.payload)
-      dbCopy[newObj._id] = newObj.item
-  
-      return {
-        ...state,
-        db: dbCopy,
-      };
-    
-    case types.DELETE_FETCH:
-      
-      const id = deleteInfo(action.payload)
-      delete dbCopy[id]
-    
-      return {
-        ...state,
-        db: dbCopy,
-      }; 
 
     default:
       return state;
