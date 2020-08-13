@@ -1,16 +1,14 @@
 import React from 'react';
 import { Container} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import SideContainer from './SideContainer';
-import FeedContainer from './FeedContainer';
-import NavBar from '../components/NavBar';
+import Board from './board.jsx';
 
 // generate object to hold our custom stylings
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
   },
-  feedContainer: {
+  board: {
     marginTop: theme.spacing(8),
     alignItems: 'center',
     width: '100%',
@@ -25,15 +23,7 @@ const MainContainer = (props) => {
   return (
     <div>
     <Container maxWidth="lg" className={classes.root}>
-      <div>
-      <NavBar/>
-      </div>  
-      <div>
-        <SideContainer/>
-      </div>
-      <div className={classes.feedContainer}>
-        <FeedContainer title='Gabriela - Take Home'/>
-      </div>
+      <Board className={classes.board}/>
     </Container>
     </div>
   );
