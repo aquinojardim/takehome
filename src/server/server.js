@@ -12,10 +12,10 @@ const apiRouter = require('./routes/api');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use('/api', apiRouter);
+
 // Send main app
 app.use('/', express.static(path.resolve(__dirname, '../client/assets')));
-
-app.use('/api', apiRouter);
 
 app.get('/', (req, res) => res.status(200).sendFile(path.resolve(__dirname, '../client/index.html')));
 

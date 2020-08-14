@@ -5,21 +5,11 @@ export const setCurrentPiece = (obj) => ({
   payload: obj,
 });
 
-export const addFav = (topic) => ({
-  type: types.ADD_FAV,
-  payload: topic,
-});
-
-export const getFetch = () => ({
+export const getFetch = (obj) => ({
   type: types.GET_FETCH,
-});
-
-export const postFetch = (obj) => ({
-  type: types.POST_FETCH,
   payload: obj,
 });
 
-export const deleteFetch = (id) => ({
-  type: types.DELETE_FETCH,
-  payload: id,
+export const reset = () => ({
+  type: types.RESET,
 });

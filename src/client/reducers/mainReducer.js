@@ -3,7 +3,6 @@ import * as types from '../constants/actionTypes';
 // Set initial state
 const initialState = {
   fav: [],
-  db:{},
   gameBoard: [
     "-", "-", "-", "-", "-", "-", "-", "-",
     "-", "-", "-", "-", "-", "-", "-", "-",
@@ -23,7 +22,6 @@ const initialState = {
   suggestedMove: [],
   gamestart: true,
   gameover: false,
-  message: "Is Red turn",
 };
 
 const mainReducer = (state = initialState, action) => {
@@ -31,7 +29,6 @@ const mainReducer = (state = initialState, action) => {
   let currentPieceCopy;
   let suggestedMoveCopy = [];
   let dbCopy = {...state.db}
-  let favCopy = [...state.fav]
 
   switch (action.type) {
     // Update state with payload
@@ -49,22 +46,13 @@ const mainReducer = (state = initialState, action) => {
         if(!boardLeft.includes(action.payload.id)) suggestedMoveCopy.push(action.payload.id-9)
       }
 
-      console.log(suggestedMoveCopy)
-
       return {
         ...state,
         currentPiece: currentPieceCopy,
         suggestedMove: suggestedMoveCopy
       };
-
-    case types.ADD_FAV:
-      
-      favCopy.push(action.payload)
-
-      return {
-        ...state,
-        fav: favCopy,
-      };
+      case types.RESET:
+        return initialState
 
     default:
       return state;
